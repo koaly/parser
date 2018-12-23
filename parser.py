@@ -145,8 +145,100 @@ def terminals_checker(token):
 
 def parser(token):
     token = terminals_checker(token)
-    for i in token:
-        print(i, end =' ')
+    stack = ["S"]
+    popped = []
+    for inp in token:
+        if inp == "id":
+            while stack[-1] != "id":
+                if stack[-1] == "S":
+                elif stack[-1] == "E":
+                elif stack[-1] == "T":
+                elif stack[-1] == "F":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == "con":
+            while stack[-1] != "con":
+                if stack[-1] == "E":
+                elif stack[-1] == "T":
+                elif stack[-1] == "F":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == "+":
+            while stack[-1] != "+":
+                if stack[-1] == "Ep":
+                elif stack[-1] == "Tp":
+                elif stack[-1] == "A":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == "-":
+            while stack[-1] != "-":
+                if stack[-1] == "Ep":
+                elif stack[-1] == "Tp":
+                elif stack[-1] == "A":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == "*":
+            while stack[-1] != "*":
+                if stack[-1] == "Tp":
+                elif stack[-1] == "A":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == "/":
+            while stack[-1] != "/":
+                if stack[-1] == "Tp":
+                elif stack[-1] == "A":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == "(":
+            while stack[-1] != "(":
+                if stack[-1] == "E":
+                elif stack[-1] == "T":
+                elif stack[-1] == "F":
+                elif stack[-1] == "A":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == ")":
+            while stack[-1] != ")":
+                if stack[-1] == "Ep":
+                elif stack[-1] == "Tp":
+                elif stack[-1] == "A":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == ";":
+            while stack[-1] != ";":
+                if stack[-1] == "Ep":
+                elif stack[-1] == "Tp":
+                elif stack[-1] == "A":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == "?":
+            while stack[-1] != "?":
+                if stack[-1] == "S":
+                else:
+                    print("parse error")
+                    sys.exit(1)
+        elif inp == "=":
+            while stack[-1] != "=":
+                print("parse error")
+                sys.exit(1)
+        elif inp == "$":
+            if stack[-1] == "S":
+            else:
+                print("parse error")
+                sys.exit(1)
+        else:
+            print("parse error")
+            sys.exit(1)
+        # print(i, end =' ')
 
 if __name__ == '__main__':
     token = lexer()

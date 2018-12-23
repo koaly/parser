@@ -1,1 +1,1 @@
-id = id / + con ; 
+id = ( id ( id ) + id ( id ( id ) - con * id * id ) ) / ( con * id ) ; $ 
