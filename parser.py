@@ -140,6 +140,7 @@ def terminals_checker(token):
     for i in range(len(token)):
         if token[i] not in ["id", "con", "+", "-", "*", "/", "(", ")", "?", ";", "="]:
             token[i] = "err"
+    token.append("$")
     return token
 
 def parser(token):

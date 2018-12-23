@@ -1,1 +1,1 @@
-err con id con id err con = id err id - ) ( con + con ; id err err ) id con id / id err * - con id 
+id = id / + con ; 
