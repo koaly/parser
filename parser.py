@@ -332,7 +332,11 @@ def parser(token):
             popped.append(stack.pop())
         elif inp == "$":
             if stack[-1] == "S":
+                stack.pop()
             else:
+                print("parse error")
+                sys.exit(1)
+            if not len(stack):
                 print("parse error")
                 sys.exit(1)
         else:
