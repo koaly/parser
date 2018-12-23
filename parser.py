@@ -143,21 +143,47 @@ def terminals_checker(token):
     token.append("$")
     return token
 
+def print_stack(popped, stack):
+    stack.reverse()
+    print("L=> ")
+    for i in popped:
+        print(i, end =" ")
+    for i in stack:
+        print(i, end =" ")
+    print()
+
 def parser(token):
     token = terminals_checker(token)
     stack = ["S"]
     popped = []
+    print("L=> S")
     for inp in token:
         if inp == "id":
             while stack[-1] != "id":
                 if stack[-1] == "S":
+                    stack.pop()
+                    stack.append("S")
+                    stack.append(";")
+                    stack.append("E")
+                    stack.append("=")
+                    stack.append("id")
                 elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "F":
+                    stack.pop()
+                    stack.append("A")
+                    stack.append("id")
                 else:
                     print("parse error")
                     sys.exit(1)
-            stack.pop()
+                print_stack(popped, stack)
+            popped.append(stack.pop())
         elif inp == "con":
             while stack[-1] != "con":
                 if stack[-1] == "E":
