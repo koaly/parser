@@ -303,8 +303,11 @@ def parser(token):
         elif inp == ";":
             while stack[-1] != ";":
                 if stack[-1] == "Ep":
+                    stack.pop()
                 elif stack[-1] == "Tp":
+                    stack.pop()
                 elif stack[-1] == "A":
+                    stack.pop()
                 else:
                     print("parse error")
                     sys.exit(1)
