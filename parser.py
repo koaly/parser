@@ -316,6 +316,9 @@ def parser(token):
         elif inp == "?":
             while stack[-1] != "?":
                 if stack[-1] == "S":
+                    stack.pop()
+                    stack.append("S")
+                    stack.append("?")
                 else:
                     print("parse error")
                     sys.exit(1)
