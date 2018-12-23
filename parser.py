@@ -187,12 +187,21 @@ def parser(token):
         elif inp == "con":
             while stack[-1] != "con":
                 if stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "F":
+                    stack.pop()
+                    stack.append("con")
                 else:
                     print("parse error")
                     sys.exit(1)
-            stack.pop()
+                print_stack(popped, stack)
+            popped.append(stack.pop())
         elif inp == "+":
             while stack[-1] != "+":
                 if stack[-1] == "Ep":
