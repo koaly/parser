@@ -265,9 +265,23 @@ def parser(token):
         elif inp == "(":
             while stack[-1] != "(":
                 if stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "F":
+                    stack.pop()
+                    stack.append(")")
+                    stack.append("E")
+                    stack.append("(")
                 elif stack[-1] == "A":
+                    stack.pop()
+                    stack.append(")")
+                    stack.append("E")
+                    stack.append("(")
                 else:
                     print("parse error")
                     sys.exit(1)
