@@ -307,17 +307,26 @@ def parser(token):
                 print_stack(")", popped, stack)
             popped.append(stack.pop())
         elif inp == ";":
-            while stack[-1] != ";":
-                if stack[-1] == "Ep":
+            while len(stack) == 0 or stack[-1] != ";":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
+                if stack[-1] == "S":
                     stack.pop()
+                    print_stack(";", popped, stack)
+                elif stack[-1] == "Ep":
+                    stack.pop()
+                    print_stack(";", popped, stack)
                 elif stack[-1] == "Tp":
                     stack.pop()
+                    print_stack(";", popped, stack)
                 elif stack[-1] == "A":
                     stack.pop()
+                    print_stack(";", popped, stack)
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(";", popped, stack)
+                # print_stack(";", popped, stack)
             popped.append(stack.pop())
         elif inp == "?":
             while stack[-1] != "?":

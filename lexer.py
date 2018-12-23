@@ -30,8 +30,6 @@ def lexer():
     token = []
     while True:
         nextchar = sys.stdin.read(1)
-        if nextchar in terminator:
-            break
         if state == START:
             if nextchar in numerics:
                 lexeme += nextchar
@@ -43,6 +41,8 @@ def lexer():
                 token.append(["LITERAL", nextchar])
             elif nextchar in whitespaces:
                 continue
+            elif nextchar in terminator:
+                break
             else:
                 token.append(["ERROR", nextchar])
         elif state == IDEN:
@@ -59,6 +59,11 @@ def lexer():
                 token.append(["IDEN", lexeme])
                 lexeme = ''
                 state = START
+            elif nextchar in terminator:
+                token.append(["IDEN", lexeme])
+                lexeme = ''
+                state = START
+                break
             else:
                 token.append(["IDEN", lexeme])
                 lexeme = ''
@@ -83,6 +88,11 @@ def lexer():
             elif nextchar in dot:
                 lexeme += nextchar
                 state = DOT
+            elif nextchar in terminator:
+                token.append(["CONST", lexeme])
+                lexeme = ''
+                state = START
+                break
             else:
                 token.append(["CONST", lexeme])
                 lexeme = ''
@@ -105,6 +115,11 @@ def lexer():
                 token.append(["ERROR", lexeme])
                 lexeme = ''
                 state = START
+            elif nextchar in terminator:
+                token.append(["ERROR", lexeme])
+                lexeme = ''
+                state = START
+                break
             else:
                 token.append(["ERROR", lexeme])
                 lexeme = ''
@@ -126,6 +141,11 @@ def lexer():
                 token.append(["CONST", lexeme])
                 lexeme = ''
                 state = START
+            elif nextchar in terminator:
+                token.append(["CONST", lexeme])
+                lexeme = ''
+                state = START
+                break
             else:
                 token.append(["CONST", lexeme])
                 lexeme = ''

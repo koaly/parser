@@ -1,2 +1,11 @@
 L=> S
+L=> id = E ; S 
+L=> id = T Ep ; S 
+L=> id = F Tp Ep ; S 
+L=> id = con Tp Ep ; S 
+L=> id = con * F Tp Ep ; S 
+L=> id = con * id A Tp Ep ; S 
+L=> id = con * id Tp Ep ; S 
+L=> id = con * id Ep ; S 
+L=> id = con * id ; S 
 parse error

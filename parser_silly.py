@@ -30,8 +30,6 @@ def lexer():
     token = []
     while True:
         nextchar = sys.stdin.read(1)
-        if nextchar in terminator:
-            break
         if state == START:
             if nextchar in numerics:
                 lexeme += nextchar
@@ -43,6 +41,8 @@ def lexer():
                 token.append(nextchar)
             elif nextchar in whitespaces:
                 continue
+            elif nextchar in terminator:
+                break
             else:
                 token.append(nextchar)
         elif state == IDEN:
@@ -59,6 +59,11 @@ def lexer():
                 token.append("id")
                 lexeme = ''
                 state = START
+            elif nextchar in terminator:
+                token.append("id")
+                lexeme = ''
+                state = START
+                break
             else:
                 token.append("id")
                 lexeme = ''
@@ -83,6 +88,11 @@ def lexer():
             elif nextchar in dot:
                 lexeme += nextchar
                 state = DOT
+            elif nextchar in terminator:
+                token.append("con")
+                lexeme = ''
+                state = START
+                break
             else:
                 token.append("con")
                 lexeme = ''
@@ -105,6 +115,11 @@ def lexer():
                 token.append("err")
                 lexeme = ''
                 state = START
+            elif nextchar in terminator:
+                token.append("err")
+                lexeme = ''
+                state = START
+                break
             else:
                 token.append("err")
                 lexeme = ''
@@ -126,6 +141,11 @@ def lexer():
                 token.append("con")
                 lexeme = ''
                 state = START
+            elif nextchar in terminator:
+                token.append("con")
+                lexeme = ''
+                state = START
+                break
             else:
                 token.append("con")
                 lexeme = ''
@@ -159,13 +179,18 @@ def print_stack(state, popped, s):
     stack.reverse()
 
 def parser(token):
+    # print(token)
     token = terminals_checker(token)
+    # print(token)
     stack = ["S"]
     popped = []
     print("L=> S")
     for inp in token:
         if inp == "id":
-            while stack[-1] != "id":
+            while len(stack) == 0 or stack[-1] != "id":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
                     stack.append("S")
@@ -197,7 +222,10 @@ def parser(token):
                 print_stack("id", popped, stack)
             popped.append(stack.pop())
         elif inp == "con":
-            while stack[-1] != "con":
+            while len(stack) == 0 or stack[-1] != "con":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
                 elif stack[-1] == "E":
@@ -223,14 +251,25 @@ def parser(token):
                 print_stack("con", popped, stack)
             popped.append(stack.pop())
         elif inp == "+":
-            while stack[-1] != "+":
+            while len(stack) == 0 or stack[-1] != "+":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
+                elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "Ep":
                     stack.pop()
                     stack.append("Ep")
                     stack.append("T")
                     stack.append("+")
+                elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "Tp":
                     stack.pop()
                 elif stack[-1] == "A":
@@ -241,14 +280,25 @@ def parser(token):
                 print_stack("+", popped, stack)
             popped.append(stack.pop())
         elif inp == "-":
-            while stack[-1] != "-":
+            while len(stack) == 0 or stack[-1] != "-":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
+                elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "Ep":
                     stack.pop()
                     stack.append("Ep")
                     stack.append("T")
                     stack.append("-")
+                elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "Tp":
                     stack.pop()
                 elif stack[-1] == "A":
@@ -259,11 +309,22 @@ def parser(token):
                 print_stack("-", popped, stack)
             popped.append(stack.pop())
         elif inp == "*":
-            while stack[-1] != "*":
+            while len(stack) == 0 or stack[-1] != "*":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
+                elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "Ep":
                     stack.pop()
+                elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "Tp":
                     stack.pop()
                     stack.append("Tp")
@@ -277,11 +338,22 @@ def parser(token):
                 print_stack("*", popped, stack)
             popped.append(stack.pop())
         elif inp == "/":
-            while stack[-1] != "/":
+            while len(stack) == 0 or stack[-1] != "/":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
+                elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "Ep":
                     stack.pop()
+                elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "Tp":
                     stack.pop()
                     stack.append("Tp")
@@ -295,7 +367,10 @@ def parser(token):
                 print_stack("/", popped, stack)
             popped.append(stack.pop())
         elif inp == "(":
-            while stack[-1] != "(":
+            while len(stack) == 0 or stack[-1] != "(":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
                 elif stack[-1] == "E":
@@ -326,11 +401,22 @@ def parser(token):
                 print_stack("(", popped, stack)
             popped.append(stack.pop())
         elif inp == ")":
-            while stack[-1] != ")":
+            while len(stack) == 0 or stack[-1] != ")":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
+                elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "Ep":
                     stack.pop()
+                elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "Tp":
                     stack.pop()
                 elif stack[-1] == "A":
@@ -341,11 +427,22 @@ def parser(token):
                 print_stack(")", popped, stack)
             popped.append(stack.pop())
         elif inp == ";":
-            while stack[-1] != ";":
+            while len(stack) == 0 or stack[-1] != ";":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
+                elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "Ep":
                     stack.pop()
+                elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "Tp":
                     stack.pop()
                 elif stack[-1] == "A":
@@ -356,13 +453,24 @@ def parser(token):
                 print_stack(";", popped, stack)
             popped.append(stack.pop())
         elif inp == "?":
-            while stack[-1] != "?":
+            while len(stack) == 0 or stack[-1] != "?":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
                 if stack[-1] == "S":
                     stack.pop()
                     stack.append("S")
                     stack.append("?")
+                elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
                 elif stack[-1] == "Ep":
                     stack.pop()
+                elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
                 elif stack[-1] == "Tp":
                     stack.pop()
                 elif stack[-1] == "A":
@@ -373,7 +481,33 @@ def parser(token):
                 print_stack("?", popped, stack)
             popped.append(stack.pop())
         elif inp == "=":
-            while stack[-1] != "=":
+            while len(stack) == 0 or stack[-1] != "=":
+                if len(stack) == 0:
+                    print("parse error")
+                    sys.exit(1)
+                if stack[-1] == "S":
+                    stack.pop()
+                elif stack[-1] == "E":
+                    stack.pop()
+                    stack.append("Ep")
+                    stack.append("T")
+                elif stack[-1] == "Ep":
+                    stack.pop()
+                elif stack[-1] == "T":
+                    stack.pop()
+                    stack.append("Tp")
+                    stack.append("F")
+                elif stack[-1] == "Tp":
+                    stack.pop()
+                elif stack[-1] == "A":
+                    stack.pop()
+                else:
+                    print("parse error")
+                    sys.exit(1)
+                print_stack("?", popped, stack)
+            popped.append(stack.pop())
+        elif inp == "$":
+            while len(stack) != 0:
                 if stack[-1] == "S":
                     stack.pop()
                 elif stack[-1] == "Ep":
@@ -382,26 +516,14 @@ def parser(token):
                     stack.pop()
                 elif stack[-1] == "A":
                     stack.pop()
-                print("parse error")
-                sys.exit(1)
-            popped.append(stack.pop())
-        elif inp == "$":
-            if stack[-1] == "S":
-                stack.pop()
-            elif stack[-1] == "Ep":
-                stack.pop()
-            elif stack[-1] == "Tp":
-                stack.pop()
-            elif stack[-1] == "A":
-                stack.pop()
-            else:
-                print("parse error")
-                sys.exit(1)
-            print_stack("$", popped, stack)
-            if len(stack) != 0:
-                print("parse error")
-                # print(stack)
-                sys.exit(1)
+                else:
+                    print("parse error")
+                    sys.exit(1)
+                print_stack("$", popped, stack)
+            # if len(stack) != 0:
+            #     print("parse error")
+            #     # print(stack)
+            #     sys.exit(1)
         else:
             print("parse error")
             sys.exit(1)
