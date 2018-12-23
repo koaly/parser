@@ -143,14 +143,20 @@ def terminals_checker(token):
     token.append("$")
     return token
 
-def print_stack(popped, stack):
+def print_stack(state, popped, s):
+    stack = s
     stack.reverse()
-    print("L=> ")
+    # print("****")
+    # print(state)
+    # print(popped)
+    # print(stack)
+    print("L=>", end = " ")
     for i in popped:
         print(i, end =" ")
     for i in stack:
         print(i, end =" ")
     print()
+    stack.reverse()
 
 def parser(token):
     token = terminals_checker(token)
@@ -182,7 +188,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack("id", popped, stack)
             popped.append(stack.pop())
         elif inp == "con":
             while stack[-1] != "con":
@@ -200,7 +206,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack("con", popped, stack)
             popped.append(stack.pop())
         elif inp == "+":
             while stack[-1] != "+":
@@ -216,7 +222,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack("+", popped, stack)
             popped.append(stack.pop())
         elif inp == "-":
             while stack[-1] != "-":
@@ -232,7 +238,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack("-", popped, stack)
             popped.append(stack.pop())
         elif inp == "*":
             while stack[-1] != "*":
@@ -246,7 +252,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack("*", popped, stack)
             popped.append(stack.pop())
         elif inp == "/":
             while stack[-1] != "/":
@@ -260,7 +266,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack("/", popped, stack)
             popped.append(stack.pop())
         elif inp == "(":
             while stack[-1] != "(":
@@ -285,7 +291,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack("(", popped, stack)
             popped.append(stack.pop())
         elif inp == ")":
             while stack[-1] != ")":
@@ -298,7 +304,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack(")", popped, stack)
             popped.append(stack.pop())
         elif inp == ";":
             while stack[-1] != ";":
@@ -311,7 +317,7 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack(";", popped, stack)
             popped.append(stack.pop())
         elif inp == "?":
             while stack[-1] != "?":
@@ -322,22 +328,23 @@ def parser(token):
                 else:
                     print("parse error")
                     sys.exit(1)
-                print_stack(popped, stack)
+                print_stack("?", popped, stack)
             popped.append(stack.pop())
         elif inp == "=":
             while stack[-1] != "=":
                 print("parse error")
                 sys.exit(1)
-                print_stack(popped, stack)
             popped.append(stack.pop())
         elif inp == "$":
             if stack[-1] == "S":
                 stack.pop()
+                print_stack("$", popped, stack)
             else:
                 print("parse error")
                 sys.exit(1)
-            if not len(stack):
+            if len(stack) != 0:
                 print("parse error")
+                # print(stack)
                 sys.exit(1)
         else:
             print("parse error")
